@@ -1,0 +1,48 @@
+{% extends 'yonglong/base.html' %}
+{% load staticfiles %}
+
+{% block title %}<title>合作伙伴</title>{% endblock %}
+
+{% block Custom_styles %}
+<link href="{% static 'yonglong/css/dashboard.css' %}" rel="stylesheet">
+{% endblock %}
+
+{% block body %}
+{% include "yonglong/subhead.html" %}
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <ul class="breadcrumb">
+                <li><a href="{% url 'yonglong:index' %}">天津永隆</a></li>
+                <li><a href="#" class="text-muted">合作伙伴</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="row">
+        {% for partner in partner_content %}
+        <div class=" col-md-6">
+            <div class="panel panel-info">
+                <div class="panel-heading">
+                    <h4 class="panel-title">{{ partner.name }}</h4>
+                </div>
+                <div class="panel-body">
+                    <div class="media">
+                        <span class="pull-left">
+                            {% if partner.logo %}
+                            <img src="{{ partner.logo.url }}" alt="" width="140" height="140">
+                            {% else %}
+                            <img class="img-circle" src="data:image/gif;base64,R0lGODlhAQABAIAAAHd3dwAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw==" alt="Generic placeholder image" width="140" height="140">
+                            {% endif %}
+                        </span>
+                        <div class="media-body">
+                            <h4 class="media-heading">{{ partner.name_en }}</h4>
+                            {{ partner.content }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,60 @@
+{% extends 'yonglong/base.html' %}
+{% load staticfiles %}
+
+{% block title %}<title>联系我们</title>{% endblock %}
+
+{% block Custom_styles %}
+<link href="{% static 'yonglong/css/dashboard.css' %}" rel="stylesheet">
+{% endblock %}
+
+{% block body %}
+{% include "yonglong/subhead.html" %}
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <ul class="breadcrumb">
+                <li><a href="{% url 'yonglong:index' %}">天津永隆</a></li>
+                <li><a href="#" class="text-muted">联系我们</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xs-6">
+            <div class="well">
+                <address>
+                    {% for contact in contact_list %}
+                    {% ifequal contact.id 1 %}
+                    <strong>{{ contact.name }} </strong><br>
+                    地址：{{ contact.address }} <br>
+                    电话：{{ contact.telephone }} <br>
+                    邮箱：<a href="mailto:{{ contact.Email }}">{{ contact.Email }} </a><br>
+                    邮编：{{ contact.zipcode }} <br>
+                    {% else %}
+                    <br>
+                    <strong>公司联系人</strong><br>
+                    <br>
+                    经理：{{ contact.name }}<br>
+                    电话：{{ contact.telephone }} <br>
+                    Q Q：<a href="http://wpa.qq.com/msgrd?v=3&uin={{ contact.QQ }}&site=qq&menu=yes" target="_blank">{{ contact.QQ }}</a><br>
+                    {% endifequal %}
+                    {% endfor %}
+                </address>
+            </div>
+            <div class="page-header"></div>
+            <p class="lead">乘车线路</p>
+            <div class="well">
+                <p>
+                    {% for bus_route in bus_route_list %}
+                <p><strong>{{ bus_route.station }}</strong></p>
+                <p>{{ bus_route.route }}</p>
+                {% endfor %}
+                </p>
+            </div>
+        </div>
+        <div class="col-xs-6">
+            <iframe src="{% url 'yonglong:baidu_map' %}" frameborder="0" width="555" height="697" scrolling="no"></iframe>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,36 @@
+{% extends 'yonglong/base.html' %}
+{% load staticfiles %}
+
+{% block title %}<title>证书服务</title>{% endblock %}
+
+{% block Custom_styles %}
+<link href="{% static 'yonglong/css/dashboard.css' %}" rel="stylesheet">
+{% endblock %}
+
+{% block body %}
+{% include "yonglong/subhead.html" %}
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <ul class="breadcrumb">
+                <li><a href="{% url 'yonglong:index' %}">天津永隆</a></li>
+                <li><a href="#" class="text-muted">证书服务</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="row">
+        {% for certificate in certificate_list %}
+        <div class="col-md-4 col-sm-6 col-xs-6">
+              <h4>{{ certificate.heading }}</h4>
+              <p><a href="{% url 'yonglong:certificate_details' certificate.id %}"><img src="{{certificate.pic.url}}" alt="{{ certificate.heading }}"></a></p>
+              <p><a class="btn btn-info btn-xs" href="{% url 'yonglong:certificate_details' certificate.id %}" role="button">详细 &raquo;</a></p>
+            <hr>
+        </div>
+        {% endfor %}
+
+    </div><!--/row-->
+
+</div>
+
+
+{% endblock %}

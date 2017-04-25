@@ -1,0 +1,40 @@
+{% extends 'yonglong/base.html' %}
+{% load staticfiles %}
+
+{% block title %}<title>新闻动态</title>{% endblock %}
+
+{% block Custom_styles %}
+<link href="{% static 'yonglong/css/dashboard.css' %}" rel="stylesheet">
+{% endblock %}
+
+{% block body %}
+{% include "yonglong/subhead.html" %}
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <ul class="breadcrumb">
+                <li><a href="{% url 'yonglong:index' %}">天津永隆</a></li>
+                <li><a href="{% url 'yonglong:news' %}" >新闻动态</a>
+                <li><a href="#" class="text-muted">{{ news.headline }}</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="row">
+      <div class="page-header">
+      <h4 align="center">{{ news.headline }}</h4>
+      <h6 align="center">
+          <small>阅读次数:{{ news.times }}&nbsp;&nbsp;&nbsp;&nbsp;发表时间：{{news.pub_date | date:"Y-m-d H:i:s"}}
+          </small>
+      </h6>
+      </div>
+        <div class="well">
+            {% autoescape off %}
+            {{ news.content }}
+            {% endautoescape %}
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block script %}
+$('#{{active_news}}').addClass("active");
+{% endblock %}

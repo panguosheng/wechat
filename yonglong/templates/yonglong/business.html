@@ -1,0 +1,30 @@
+{% extends 'yonglong/base.html' %}
+{% load staticfiles %}
+
+{% block title %}<title>公司业务</title>{% endblock %}
+
+{% block Custom_styles %}
+<link href="{% static 'yonglong/css/dashboard.css' %}" rel="stylesheet">
+{% endblock %}
+
+{% block body %}
+{% include "yonglong/subhead.html" %}
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <ul class="breadcrumb">
+                <li><a href="{% url 'yonglong:index' %}">天津永隆</a></li>
+                <li><a href="#" class="text-muted">业务范围</a></li>
+            </ul>
+        </div>
+    </div>
+    <hr>
+    <div class="row">
+        {% for business in business_list %}
+        <p><strong>{{ forloop.counter }}、{{ business.title }}</strong>
+        <br>{{ business.content }}
+        </p>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

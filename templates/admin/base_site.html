@@ -1,0 +1,9 @@
+{% extends "admin/base.html" %}
+
+{% block title %}{{ title }} | {{ site_title|default:_('管理页面') }}{% endblock %}
+
+{% block branding %}
+<h1 id="site-name"><a href="{% url 'admin:index' %}">{{ site_header|default:_('天津永隆船员管理公司管理页面') }}</a></h1>
+{% endblock %}
+
+{% block nav-global %}{% endblock %}

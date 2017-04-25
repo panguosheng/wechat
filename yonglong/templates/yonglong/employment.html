@@ -1,0 +1,113 @@
+{% extends 'yonglong/base.html' %}
+{% load staticfiles %}
+
+{% block title %}<title>船员招聘</title>{% endblock %}
+
+{% block Custom_styles %}
+<link href="{% static 'yonglong/css/dashboard.css' %}" rel="stylesheet">
+{% endblock %}
+
+{% block body %}
+{% include "yonglong/subhead.html" %}
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <ul class="breadcrumb">
+                <li><a href="{% url 'yonglong:index' %}">天津永隆</a></li>
+                <li><a href="#" class="text-muted">船员招聘</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xs-3">
+            <div class="list-group">
+                {% for post in post_list %}
+                <a href="{% url 'yonglong:employment_post' post.post_en %}" class="list-group-item" id="{{ post.post_en }}">
+                    {{ post.post_cn }}
+                </a>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="col-xs-9">
+            <div class="panel panel-info">
+                <div class="panel-heading">
+                    <h3 class="panel-title">招聘信息</h3>
+                </div>
+                <div class="panel-body" style="padding-bottom:0px;">
+                    <div class="table-responsive">
+                        {% if employment_list %}
+                        <table class="table table-bordered table-hover">
+                            <thead>
+                            <tr class="active">
+                                <th>招聘职位</th>
+                                <th>招聘船型</th>
+                                <th>航行区域</th>
+                                <th>证书等级</th>
+                                <th>发布日期</th>
+                                <th>截止日期</th>
+                                <th>备　　注</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for employment in employment_list %}
+                            {% if forloop.counter0|divisibleby:2 %}
+                            <tr class="default">
+                                {% else %}
+                            <tr class="success">
+                                {% endif %}
+                                <td><a href="{% url 'yonglong:employment_details' employment.id %}" target="_blank">{{ employment.post }}</a></td>
+                                <td>{{ employment.type }}</td>
+                                <td>{{ employment.area }}</td>
+                                <td>{{ employment.certificate_grade }}</td>
+                                <td>{{ employment.issue_date | date:"Y-m-d" }}</td>
+                                <td>{% ifequal employment.deadline None %}
+                                    {% else %}
+                                    {{ employment.deadline | date:"Y-m-d" }}
+                                    {% endifequal %}
+                                </td>
+                                <td>{{ employment.remark }}</td>
+                            </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+
+                        <ul class="pager">
+                            {% if employment_list.has_previous %}
+                            <li class="previous"><a
+                                    href="?page={{ employment_list.previous_page_number }}">上一页</a>
+                            </li>
+                            {% else %}
+                            <li class="previous disabled"><a href="#">上一页</a></li>
+                            {% endif %}
+                            {% for p in page_range %}
+                            {% ifequal p employment_list.number %}
+                            <li class="active">{{p}}</li>
+                            {% else %}
+                            <li><a href="?page={{p}}">{{p}}</a></li>
+                            {% endifequal %}
+                            {% endfor %}
+
+                            第 {{ employment_list.number }} / {{ employment_list.paginator.num_pages }}页
+                            {% if employment_list.has_next %}
+                            <li class="next"><a
+                                    href="?page={{ employment_list.next_page_number }}">下一页</a>
+                            </li>
+                            {% else %}
+                            <li class="next disabled"><a href="#">下一页</a></li>
+                            {% endif %}
+                        </ul>
+
+                        {% else %}
+                        <br>
+                        <p><strong>{{ error_msg }}</strong></p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block script %}
+$('#{{active_sidebar}}').addClass("active");
+{% endblock %}
