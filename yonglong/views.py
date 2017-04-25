@@ -291,7 +291,7 @@ def crew_appearance(request):
 
 def account_login(request):
     if request.method == 'GET':
-        return render(request, 'yonglong/login.html', {'next': request.path})
+        return render(request, 'yonglong/login.html', {'next': '/'})
     else:
         username = request.POST.get('username', '')
         password = request.POST.get('password', '')
