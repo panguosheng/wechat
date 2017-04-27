@@ -8,7 +8,7 @@ from django.contrib.auth import login
 from django.contrib import auth
 from django.contrib.auth.decorators import login_required
 from .models import Certificate, Contacts, BusRoute, Employment, News, \
-    About, Post, NewsCategory, Business, Partner
+    About, Post, NewsCategory, Business, Partner, CrewAppearance
 
 COMPANY_PURPOSE = '以人为本、以德为先、德才兼备'
 
@@ -19,17 +19,16 @@ before_range_num = 5
 
 def index(request):
     employment_list = Employment.objects.all().order_by('-id')[0:5]
-    # values('id', 'ship_type', 'post', 'certificate_grade', 'area',  'issue_date',
-    #                                             'deadline', 'remark').order_by("-id")
     news_list = News.objects.values('id', 'headline').order_by('-id')[0:5]
     partner_list = Partner.objects.values('name')[0:5]
+    appearance_list = CrewAppearance.objects.all()[0:9]
     content = {
         'active_menu': 'index',
         'employment_list': employment_list,
         'news_list': news_list,
         'partner_list': partner_list,
         'login_user': request.user,
-        'next': request.path,
+        'appearance_list': appearance_list,
     }
     return render(request, 'yonglong/index.html', content)
 
@@ -42,7 +41,6 @@ def about(request):
         'company_purpose': COMPANY_PURPOSE,
         'about': about_content,
         'login_user': request.user,
-        'next': request.path,
     }
     return render(request, 'yonglong/about.html', content)
 
@@ -55,7 +53,6 @@ def business(request):
         'company_purpose': COMPANY_PURPOSE,
         'business_list': business_list,
         'login_user': request.user,
-        'next': request.path,
     }
     return render(request, 'yonglong/business.html', content)
 
@@ -68,7 +65,6 @@ def certificate(request):
         'company_purpose': COMPANY_PURPOSE,
         'certificate_list': certificate_list,
         'login_user': request.user,
-        'next': request.path,
     }
     return render(request, 'yonglong/certificate.html', content)
 
@@ -81,7 +77,6 @@ def certificate_details(request, certificate_id):
         'company_purpose': COMPANY_PURPOSE,
         'certificate': detail,
         'login_user': request.user,
-        'next': request.path,
     }
     return render(request, 'yonglong/certificate_details.html', content)
 
@@ -96,7 +91,6 @@ def contact(request):
         'contact_list': contact_list,
         'bus_route_list': bus_route_list,
         'login_user': request.user,
-        'next': request.path,
     }
     return render(request, 'yonglong/contact.html', content)
 
@@ -162,7 +156,6 @@ def news(request):
             'page_range': page_range,
             'error_msg': '没有相关信息',
             'login_user': request.user,
-            'next': request.path,
         }
         return render(request, 'yonglong/news.html', content)
 
@@ -178,7 +171,6 @@ def news_details(request, news_id):
         'company_purpose': COMPANY_PURPOSE,
         'news': detail,
         'login_user': request.user,
-        'next': request.path,
     }
     return render(request, 'yonglong/news_details.html', content)
 
@@ -210,7 +202,6 @@ def employment(request):
         'page_range': page_range,
         'error_msg': '没有相关信息',
         'login_user': request.user,
-        'next': request.path,
     }
     return render(request, 'yonglong/employment.html', content)
 
@@ -221,7 +212,6 @@ def employment_post(request, quarters):
     quarters_list = Post.objects.all()  # 查询出职位所对应的英文和中文
 
     for item in quarters_list:
-        # quarters_dict[item.post_en] = item.post_cn 新改为提交
         quarters_dict[item.post_en] = item.id
 
     if quarters == 'all':
@@ -253,7 +243,6 @@ def employment_post(request, quarters):
         'page_range': page_range,
         'error_msg': '没有相关信息',
         'login_user': request.user,
-        'next': request.path,
     }
     return render(request, 'yonglong/employment.html', content)
 
@@ -280,35 +269,39 @@ def partner(request):
         'company_purpose': COMPANY_PURPOSE,
         'partner_content': partner_content,
         'login_user': request.user,
-        'next': request.path,
     }
     return render(request, 'yonglong/partner.html', content)
 
 
-def crew_appearance(request):
-    return render_to_response('yonglong/crewappearance.html')
+def appearance(request):
+    appearance_list = CrewAppearance.objects.all()
+    content = {
+        # 'active_menu': 'partner',
+        'company_purpose': COMPANY_PURPOSE,
+        'appearance_list': appearance_list,
+        'login_user': request.user,
+    }
+
+    return render(request, 'yonglong/appearance.html', content)
 
 
 def account_login(request):
     if request.method == 'GET':
-        return render(request, 'yonglong/login.html', {'next': '/'})
+        request.session['login_from'] = request.META.get('HTTP_REFERER', '/')
+        return render(request, 'yonglong/login.html', {})
     else:
         username = request.POST.get('username', '')
         password = request.POST.get('password', '')
-        target = request.POST.get('next', '/accounts/login/')
         user = auth.authenticate(username=username, password=password)
         if user is not None and user.is_active:
             login(request, user)
-            return HttpResponseRedirect(target)
+            return HttpResponseRedirect(request.session['login_from'])
         else:
             content = {
                 'password_is_wrong': True,
                 'current_name': username,
             }
-            if target == '/accounts/login/':
-                return render(request, 'yonglong/login.html', content)
-            else:
-                return HttpResponseRedirect(target, content)
+            return render(request, 'yonglong/login.html', content)
 
 
 @login_required
