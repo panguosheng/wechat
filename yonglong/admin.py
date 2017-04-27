@@ -110,7 +110,9 @@ class PartnerAdmin(admin.ModelAdmin):
 
 
 class CrewAppearanceAdmin(admin.ModelAdmin):
-    list_display = ('headline',)
+    list_display = ('headline', 'category', 'pub_time')
+    list_filter = ('category',)
+    date_hierarchy = 'pub_time'
 
 admin.site.register(Certificate, CertificateAdmin)
 admin.site.register(Contacts, ContactsAdmin)
