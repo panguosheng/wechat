@@ -1,0 +1,19 @@
+{% load staticfiles %}
+
+<div class="section section-project">
+  <div class="project-carousel">
+	<div class="project-strip">
+		{% for appearance in appearance_list %}
+			<div class="project"><img width="289" height="180" src="{{ appearance.picture.url }}" alt=""/></div>
+		{% endfor %}
+	</div>
+	<div class="project-screen">
+	  <div class="project-detail">
+		{% for appearance in appearance_list %}
+			<div class="project"><img width="289" height="180" src="{{ appearance.picture.url }}" alt=""/></div>
+		{% endfor %}
+	  </div>
+	  <div class="screen-frame"></div>
+	</div>
+  </div>
+</div>
