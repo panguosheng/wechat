@@ -4,6 +4,10 @@
 {% block Custom_styles %}
 <link href="{% static 'yonglong/css/carousel.css' %}" rel="stylesheet">
 <link rel="stylesheet" href="{% static 'yonglong/css/dashboard.css' %}">
+
+<link rel="stylesheet" href="{% static 'yonglong/css/normalize.css' %}">
+<link rel='stylesheet prefetch' href="{% static 'yonglong/css/slick.min.css' %}">
+<link rel="stylesheet" href="{% static 'yonglong/css/appearance.css' %}">
 {% endblock %}
 
 {% block body %}
@@ -87,37 +91,39 @@
                         <h3 class="panel-title">招聘信息</h3>
                     </div>
                     <div class="panel-body" style="padding-bottom:0px;">
-                        <table class="table table-sm table-bordered table-hover">
-                            <thead>
-                            <tr class="active">
-                                <th>招聘职位</th>
-                                <th>招聘船型</th>
-                                <th>航行区域</th>
-                                <th>证书等级</th>
-                                <th>发布日期</th>
-                                <th>截止日期</th>
-                                <th>备　　注</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            {% for employment in employment_list %}
-                            <tr>
-                                <td><a href="{% url 'yonglong:employment_details' employment.id %}" target="_blank">
-                                    {{ employment.post }}</a></td>
-                                <td>{{ employment.type }}</td>
-                                <td>{{ employment.area }}</td>
-                                <td>{{ employment.certificate_grade }}</td>
-                                <td>{{ employment.issue_date | date:"Y-m-d" }}</td>
-                                <td>{% ifequal employment.deadline None %}
-                                    {% else %}
-                                    {{ employment.deadline | date:"Y-m-d" }}
-                                    {% endifequal %}
-                                </td>
-                                <td>{{ employment.remark }}</td>
-                            </tr>
-                            {% endfor %}
-                            </tbody>
-                        </table>
+                        <div class="table-responsive">
+                            <table class="table table-bordered table-hover">
+                                <thead>
+                                <tr class="active">
+                                    <th>招聘职位</th>
+                                    <th>招聘船型</th>
+                                    <th>航行区域</th>
+                                    <th>证书等级</th>
+                                    <th>发布日期</th>
+                                    <th>截止日期</th>
+                                    <th>备　　注</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for employment in employment_list %}
+                                <tr>
+                                    <td><a href="{% url 'yonglong:employment_details' employment.id %}" target="_blank">
+                                        {{ employment.post }}</a></td>
+                                    <td>{{ employment.type }}</td>
+                                    <td>{{ employment.area }}</td>
+                                    <td>{{ employment.certificate_grade }}</td>
+                                    <td>{{ employment.issue_date | date:"Y-m-d" }}</td>
+                                    <td>{% ifequal employment.deadline None %}
+                                        {% else %}
+                                        {{ employment.deadline | date:"Y-m-d" }}
+                                        {% endifequal %}
+                                    </td>
+                                    <td>{{ employment.remark }}</td>
+                                </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                     <div class="panel-footer">
                         <a class="btn btn-xs btn-success" href="{% url 'yonglong:employment' %}" role="button">更多
@@ -154,10 +160,10 @@
                         <h3 class="panel-title">船员风采</h3>
                     </div>
                     <div class="panel-body" style="padding-bottom:0px;">
-
+                        {% include "yonglong/subappearance.html" %}
                     </div>
                     <div class="panel-footer">
-                        <a class="btn btn-xs btn-success" href="#" role="button">更多
+                        <a class="btn btn-xs btn-success" href="{% url 'yonglong:appearance' %}" role="button">更多
                             &raquo;</a>
                     </div>
                 </div>
@@ -165,4 +171,28 @@
         </div>
     </div>
 </div>
+{% endblock %}
+{% block script %}
+<script src="{% static 'yonglong/js/slick.min.js' %}"></script>
+<script type="text/javascript">
+	$(".project-detail").slick({
+		slidesToShow: 1,
+		arrows: false,
+		asNavFor: '.project-strip',
+		autoplay: true,
+		autoplaySpeed: 3000
+	});
+
+	$(".project-strip").slick({
+		slidesToShow: 5,
+		slidesToScroll: 1,
+		arrows: false,
+		asNavFor: '.project-detail',
+		dots: false,
+		infinite: true,
+		centerMode: true,
+		focusOnSelect: true
+	});
+
+</script>
 {% endblock %}
