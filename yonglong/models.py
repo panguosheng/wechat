@@ -184,6 +184,8 @@ class Partner(models.Model):
 
 class CrewAppearance(models.Model):
     headline = models.CharField(max_length=100, verbose_name='图片描述')
+    category = models.CharField(max_length=50, verbose_name='图片分类', blank=True)
+    pub_time = models.DateTimeField(verbose_name='上传时间', auto_now=False, default=timezone.now)
     picture = models.ImageField(upload_to='yonglong/appearance/', verbose_name='图片')
 
     class Meta:
