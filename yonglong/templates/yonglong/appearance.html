@@ -1,0 +1,35 @@
+{% extends 'yonglong/base.html' %}
+{% load staticfiles %}
+
+{% block title %}<title>风采展示</title>{% endblock %}
+{% block Custom_styles %}
+<link href="{% static 'yonglong/css/dashboard.css' %}" rel="stylesheet">
+{% endblock %}
+
+{% block body %}
+{% include "yonglong/subhead.html" %}
+<div class="container">
+
+    <div class="row">
+        <div class="col-md-12">
+            <ul class="breadcrumb">
+                <li><a href="{% url 'yonglong:index' %}">天津永隆</a></li>
+                <li><a href="#" class="text-muted">风采展示</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="row-fluid">
+        {% for appearance in appearance_list %}
+        <div align="center" class="col-md-3 col-sm-6">
+            <img src="{{ appearance.picture.url }}" alt="{{ appearance.headline }}" class="img-thumbnail" style="width: 289px; height: 180px;">
+            <h4 align="center">{{ appearance.headline }}
+                <br>
+                <small class="text-muted">拍摄于:{{ appearance.pub_time|date:'Y-m-d' }}
+                </small>
+            </h4>
+            <hr>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
